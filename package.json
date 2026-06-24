@@ -1,0 +1,29 @@
+{
+  "name": "peticion-en-3-clics",
+  "version": "1.0.0",
+  "description": "Plataforma comunitaria para crear causas, registrar apoyos y generar PDF colectivo.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "node app.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmgranda/peticion-en-3-clics.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mmgranda/peticion-en-3-clics/issues"
+  },
+  "homepage": "https://github.com/mmgranda/peticion-en-3-clics#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "sqlite3": "^6.0.1"
+  }
+}
