@@ -148,6 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarCausas();
 });
 
+function descargarPdf(causaId) {
+  window.open(`/api/pdf/${causaId}`, "_blank");
+}
+
 async function pintarCausas(causas) {
   const contenedor = document.getElementById("listaCausas");
 
@@ -159,6 +163,11 @@ async function pintarCausas(causas) {
           <p>${causa.descripcion}</p>
           <p><strong>Fecha:</strong> ${causa.fecha_creacion}</p>
           <p class="contador" id="contador-${causa.id}">Cargando apoyos...</p>
+          <p>
+            <button type="button" onclick="descargarPdf(${causa.id})">
+              Descargar PDF
+            </button>
+          </p>
 
           <section class="privacidad">
             Para apoyar esta causa usa un nombre de práctica. No escribas cédula,

@@ -8,6 +8,7 @@ require("./config/db");
 
 const causasRoutes = require("./routes/causas.routes");
 const apoyosRoutes = require("./routes/apoyos.routes");
+const pdfRoutes = require("./routes/pdf.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "views")));
 app.use("/api/causas", causasRoutes);
 app.use("/api/apoyos", apoyosRoutes);
+app.use("/api/pdf", pdfRoutes);
 
 app.get("/", (req, res) => {
   res.send("Petición en 3 Clics funcionando");

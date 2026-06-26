@@ -25,3 +25,12 @@ La Clase 57 agrega una interfaz en `/` que permite:
 
 El formulario de apoyo solo pide nombre de práctica y comentario opcional.
 No solicita cédula, teléfono, dirección ni datos sensibles.
+
+## Generación de PDF
+
+La Clase 58 agrega generación de PDF colectivo.
+
+Ruta:
+
+```txt
+GET /api/pdf/:causaId
