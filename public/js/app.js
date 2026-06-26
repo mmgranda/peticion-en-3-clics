@@ -78,3 +78,121 @@ async function registrarApoyo(event, causaId) {
     console.error(error);
   }
 }
+
+async function cargarCausas() {
+  const contenedor = document.getElementById("listaCausas");
+  contenedor.textContent = "Cargando causas...";
+
+  try {
+    const response = await fetch("/api/causas");
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      contenedor.textContent = "No fue posible cargar las causas.";
+      return;
+    }
+
+    if (data.causas.length === 0) {
+      contenedor.textContent = "Aún no hay causas registradas.";
+      return;
+    }
+
+    await pintarCausas(data.causas);
+  } catch (error) {
+    contenedor.textContent = "Error conectando con el servidor.";
+    console.error(error);
+  }
+}
+
+async function crearCausa(event) {
+  event.preventDefault();
+
+  const titulo = document.getElementById("titulo").value.trim();
+  const descripcion = document.getElementById("descripcion").value.trim();
+  const mensaje = document.getElementById("mensajeCausa");
+
+  if (!titulo || !descripcion) {
+    mensaje.textContent = "Título y descripción son obligatorios.";
+    return;
+  }
+
+  mensaje.textContent = "Creando causa...";
+
+  try {
+    const response = await fetch("/api/causas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ titulo, descripcion })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      mensaje.textContent = data.error || "No fue posible crear la causa.";
+      return;
+    }
+
+    mensaje.textContent = "Causa creada correctamente.";
+    document.getElementById("formCausa").reset();
+    await cargarCausas();
+  } catch (error) {
+    mensaje.textContent = "Error conectando con el servidor.";
+    console.error(error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("formCausa").addEventListener("submit", crearCausa);
+  cargarCausas();
+});
+
+async function pintarCausas(causas) {
+  const contenedor = document.getElementById("listaCausas");
+
+  contenedor.innerHTML = causas
+    .map((causa) => {
+      return `
+        <article class="causa">
+          <h3>${causa.titulo}</h3>
+          <p>${causa.descripcion}</p>
+          <p><strong>Fecha:</strong> ${causa.fecha_creacion}</p>
+          <p class="contador" id="contador-${causa.id}">Cargando apoyos...</p>
+
+          <section class="privacidad">
+            Para apoyar esta causa usa un nombre de práctica. No escribas cédula,
+            teléfono, dirección ni datos sensibles.
+          </section>
+
+          <form onsubmit="registrarApoyo(event, ${causa.id})">
+            <label for="nombre-${causa.id}">Nombre de práctica</label>
+            <input
+              type="text"
+              id="nombre-${causa.id}"
+              placeholder="Ejemplo: Ciudadano de práctica"
+              required
+            />
+
+            <label for="comentario-${causa.id}">Comentario opcional</label>
+            <textarea
+              id="comentario-${causa.id}"
+              rows="3"
+              placeholder="Explica brevemente por qué apoyas esta causa"
+            ></textarea>
+
+            <button type="submit">Apoyar causa</button>
+          </form>
+
+          <div class="apoyos" id="apoyos-${causa.id}">
+            Cargando comentarios...
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  for (const causa of causas) {
+    await cargarApoyos(causa.id);
+  }
+}
